@@ -1,11 +1,11 @@
 import numpy as np
-from keras.models import load_model
+from tf_keras.models import load_model
 import cv2
 
 class EmotionModel:
     def __init__(self, model_path):
         self.model = load_model(model_path)
-        self.emotion_labels = ['Angry', 'Happy', 'Neutral', 'Sad', 'Surprise']
+        self.emotion_labels = ['Angry', 'Disgusted', 'Fearful', 'Happy', 'Neutral', 'Sad', 'Surprised']
 
     def preprocess(self, face_img):
         # resize to 48x48, normalize and expand dimensions for the model
