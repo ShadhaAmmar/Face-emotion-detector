@@ -10,7 +10,7 @@ class EmotionModel:
     def preprocess(self, face_img):
         # resize to 48x48, normalize and expand dimensions for the model
         face_img = cv2.resize(face_img, (48, 48))
-        face_img = face_img.astype('float32') / 255.0
+        face_img = face_img.astype('float32')
         face_img = np.expand_dims(face_img, axis=-1)
         face_img = np.expand_dims(face_img, axis=0)
         return face_img
