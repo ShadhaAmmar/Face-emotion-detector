@@ -4,8 +4,9 @@ from emotion_model import EmotionModel
 from utils import smooth_predictions
 
 class Camera:
-    def __init__(self, model_path, cascade_path):
-        self.cap = cv2.VideoCapture(0)
+    def __init__(self, model_path, cascade_path, source=0):
+        self.source = source
+        self.cap = cv2.VideoCapture(source)
         self.face_cascade = cv2.CascadeClassifier(cascade_path)
         self.emotion_model = EmotionModel(model_path)
         self.emotion_labels = self.emotion_model.emotion_labels
@@ -13,7 +14,7 @@ class Camera:
 
     def run(self):
         if not self.cap.isOpened():
-            print("Error: Could not open webcam.")
+            print(f"Error: Could not open video source {self.source}.")
             return
         while True:
             ret, frame = self.cap.read()
