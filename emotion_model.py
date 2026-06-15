@@ -4,13 +4,22 @@ import cv2
 
 class EmotionModel:
     def __init__(self, model_path):
-        self.model = load_model(model_path)
+        import os
+        if model_path.endswith('.json'):
+            with open(model_path, 'r') as f:
+                model_json = f.read()
+            from tf_keras.models import model_from_json
+            self.model = model_from_json(model_json)
+            weights_path = os.path.splitext(model_path)[0] + '.h5'
+            self.model.load_weights(weights_path)
+        else:
+            self.model = load_model(model_path)
         self.emotion_labels = ['Angry', 'Disgusted', 'Fearful', 'Happy', 'Neutral', 'Sad', 'Surprised']
 
     def preprocess(self, face_img):
         # resize to 48x48, normalize and expand dimensions for the model
         face_img = cv2.resize(face_img, (48, 48))
-        face_img = face_img.astype('float32')
+        face_img = face_img.astype('float32') / 255.0
         face_img = np.expand_dims(face_img, axis=-1)
         face_img = np.expand_dims(face_img, axis=0)
         return face_img
