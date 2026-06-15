@@ -30,11 +30,24 @@ class EmotionModel:
         top1_prob = preds[top1_idx]
         top2_prob = preds[top2_idx]
         
-        # define complex emotions when top two classes have high probabilities
+        # 1. high-intensity basic emotions (super-emotions)
+        if top1_prob > 0.70:
+            if top1_label == "Angry":
+                return "Enraged", top1_prob
+            elif top1_label == "Surprised":
+                return "Shocked", top1_prob
+            elif top1_label == "Fearful":
+                return "Terrified", top1_prob
+            elif top1_label == "Happy":
+                return "Elated", top1_prob
+            elif top1_label == "Sad":
+                return "Devastated", top1_prob
+        
+        # 2. define complex compound emotions when top two classes have high probabilities
         if top1_prob > 0.35 and top2_prob > 0.20:
             pair = {top1_label, top2_label}
             if pair == {"Happy", "Surprised"}:
-                return "Happily Surprised", top1_prob
+                return "Amazed", top1_prob
             elif pair == {"Fearful", "Surprised"}:
                 return "Awestruck", top1_prob
             elif pair == {"Angry", "Surprised"}:
@@ -42,7 +55,7 @@ class EmotionModel:
             elif pair == {"Sad", "Surprised"}:
                 return "Disappointed", top1_prob
             elif pair == {"Angry", "Disgusted"}:
-                return "Hostile", top1_prob
+                return "Scary", top1_prob
             elif pair == {"Angry", "Sad"}:
                 return "Frustrated", top1_prob
             elif pair == {"Fearful", "Sad"}:
@@ -52,10 +65,12 @@ class EmotionModel:
             elif pair == {"Happy", "Disgusted"}:
                 return "Cynical", top1_prob
             elif pair == {"Neutral", "Sad"}:
-                return "Melancholic", top1_prob
+                return "Shy", top1_prob
             elif pair == {"Neutral", "Happy"}:
-                return "Content", top1_prob
+                return "Flirty", top1_prob
             elif pair == {"Neutral", "Angry"}:
-                return "Stern", top1_prob
+                return "Grumpy", top1_prob
+            elif pair == {"Neutral", "Fearful"}:
+                return "Shy", top1_prob
                 
         return top1_label, top1_prob
